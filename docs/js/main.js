@@ -189,6 +189,7 @@ window.addEventListener('load', (e) => {
 
     window.addEventListener('mousedown', (e) => {
         mousePos = getMousePos(e);
+        savedMousePos = getMousePos(e);
         mouseDown = true;
     });
 
@@ -217,7 +218,7 @@ window.addEventListener('load', (e) => {
         // ctx.fillRect(0,0,cWidth,cHeight);
         shootingCircle.draw(ctx);
         aimCircle.draw(ctx);
-        if (mouseDown === true) {
+        if (mouseDown === true && savedMousePos.y < groundPoint) {
             if (arrow === undefined) {
                 arrow = Arrow();
             }
