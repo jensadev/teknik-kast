@@ -179,6 +179,7 @@ window.addEventListener('load', (e) => {
 
     // Mouse events
     let mousePos = {x: 0, y: 0};
+    let savedMousePos;
     let mouseDown = false;
     let projectiles = [];
     let arrow;
@@ -235,6 +236,9 @@ window.addEventListener('load', (e) => {
                     distanceBetween(aimCircle, mousePos) / 10
                 )
             );
+            if (projectiles.length > 10) {
+                projectiles.shift();
+            }
             // console.log(projectiles[projectiles.length -1])
             arrow = undefined;
         } else {
