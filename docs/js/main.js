@@ -1,9 +1,9 @@
 const Background = function(groundPoint) {
     const background = {};
     background.ground = groundPoint + 15;
-    background.skyColor = "rgba(0,0,200,0.2)";
-    background.groundStroke = "rgba(0,100,50,0.6)"
-    background.groundColor = "rgba(0,200,100,0.6)";
+    background.skyColor = "rgba(221,8,144,0.35)";
+    background.groundStroke = "rgba(34,34,34,0.65)";
+    background.groundColor = "rgba(75,0,130,0.65)";
 
     background.draw = function(ctx, cWidth, cHeight) {
         ctx.fillStyle = this.skyColor;
@@ -24,7 +24,7 @@ const Circle = function(x, y, r) {
     circle.x = x;
     circle. y = y;
     circle.r = r;
-    circle.strokeColor = "rgba(0,0,0,0.5)";
+    circle.strokeColor = "rgba(34,34,34,0.25)";
 
     circle.update = function(x, y) {
         this.x = x;
@@ -45,8 +45,8 @@ const Arrow = function() {
     arrow.drawn = false;
     arrow.fired = false;
     arrow.aim = {x: 0, y: 0};
-    arrow.strokeColor = "rgba(0,0,0,0.2)";
-    arrow.fillColor = "rgba(0,0,0,0.6)";
+    arrow.strokeColor = "rgba(34,34,34,0.35)";
+    arrow.fillColor = "rgba(34,34,34,0.55)";
     arrow.headLength = 8;
     arrow.angle = 0;
 
@@ -108,12 +108,12 @@ const Arrow = function() {
             ctx.fill();
 
             ctx.font = "10px Arial";
-            ctx.fillStyle = "black";
+            ctx.fillStyle = "rgba(34,34,34,0.85)";
             ctx.fillText(
                 Math.round(this.angle * (180 / Math.PI))
-                + "°, Vel: " + Math.round(distanceBetween(circle, mouse) / 10)
-                + ", x: " + circle.x
-                + ", y: " + circle.y,
+                + "° Velocity: " + Math.round(distanceBetween(circle, mouse) / 10)
+                + " X: " + circle.x
+                + " Y: " + circle.y,
                 circle.x + 80, circle.y - 40
             );
         }
@@ -130,7 +130,7 @@ const Projectile = function(x, y, angle, velocity) {
     projectile.velX = velocity * Math.cos(angle);
     projectile.velY = velocity * Math.sin(angle);
     projectile.increment = 0.5;
-    projectile.fillColor = "rgba(0,0,0,0.6)";
+    projectile.fillColor = "rgba(34,34,34,0.65)";
     projectile.r = 4;
 
     projectile.update = function(gravity, groundPoint) {
@@ -150,8 +150,8 @@ const Projectile = function(x, y, angle, velocity) {
         ctx.fill();
 
         ctx.font = "10px Arial";
-        ctx.fillStyle = "black";
-        ctx.fillText("x: " + Math.round(this.x) + ", y: " + Math.round(this.y), this.x, this.y);
+        ctx.fillStyle = "rgba(34,34,34,0.85)";
+        ctx.fillText("X: " + Math.round(this.x) + " Y: " + Math.round(this.y), this.x + 8, this.y - 4);
     }
     return projectile;
 }
