@@ -1,9 +1,9 @@
 const Background = function(groundPoint) {
     const background = {};
     background.ground = groundPoint + 15;
-    background.skyColor = "rgba(221,8,144,0.35)";
-    background.groundStroke = "rgba(34,34,34,0.65)";
-    background.groundColor = "rgba(75,0,130,0.65)";
+    background.skyColor = "rgba(221,8,144,0.25)";
+    background.groundStroke = "rgba(34,34,34,0.55)";
+    background.groundColor = "rgba(75,0,130,0.45)";
 
     background.draw = function(ctx, cWidth, cHeight) {
         ctx.fillStyle = this.skyColor;
@@ -81,7 +81,6 @@ const Arrow = function() {
             ctx.strokeStyle = this.strokeColor;
             ctx.stroke();
 
-            //starting a new path from the head of the arrow to one of the sides of the point
             ctx.beginPath();
             ctx.moveTo(this.aim.x, this.aim.y);
             ctx.lineTo(
@@ -89,18 +88,12 @@ const Arrow = function() {
                 this.aim.y + this.headLength * Math.sin(this.angle - Math.PI / 7)
             );
 
-            //path from the side point of the arrow, to the other side point
             ctx.lineTo(
                 this.aim.x + this.headLength * Math.cos(this.angle + Math.PI / 7),
                 this.aim.y + this.headLength * Math.sin(this.angle + Math.PI / 7)
             );
 
-            //path from the side point back to the tip of the arrow, and then again to the opposite side point
             ctx.lineTo(this.aim.x, this.aim.y);
-            // ctx.lineTo(
-            //     this.aim.x - this.headLength * Math.cos(this.angle - Math.PI / 7),
-            //     this.aim.y - this.headLength * Math.sin(this.angle - Math.PI / 7)
-            // );
 
             ctx.strokeStyle = this.strokeColor;
             ctx.stroke();
@@ -111,7 +104,7 @@ const Arrow = function() {
             ctx.fillStyle = "rgba(34,34,34,0.85)";
             ctx.fillText(
                 Math.round(this.angle * (180 / Math.PI))
-                + "° Velocity: " + Math.round(distanceBetween(circle, mouse) / 10)
+                + "° Velocity: " + Math.round(distanceBetween(circle, mouse) / 6)
                 + " X: " + circle.x
                 + " Y: " + circle.y,
                 circle.x + 80, circle.y - 40
@@ -129,25 +122,77 @@ const Projectile = function(x, y, angle, velocity) {
     projectile.velocity = velocity;
     projectile.velX = velocity * Math.cos(angle);
     projectile.velY = velocity * Math.sin(angle);
-    projectile.increment = 0.5;
+    projectile.increment = 0.1;
+    projectile.strokeColor = "rgba(34,34,34,0.85)";
     projectile.fillColor = "rgba(34,34,34,0.65)";
     projectile.r = 4;
+    projectile.lastX = 0;
+    projectile.lastY = 0;
+    projectile.headLength = 10;
 
     projectile.update = function(gravity, groundPoint) {
-        if (this.y < groundPoint) {
-            // this.time += this.inc;
+
+//        this.angle = this.angle * this.increment;
+
+        if (this.y <= groundPoint) {
+            this.lastX = this.x;
+            this.lastY = this.y;
+            // // this.angle = this.angle + this.increment;
+
+            // let cos = Math.cos(this.angle);
+            // let sin = Math.sin(this.angle);
+    
             this.x = this.x + this.velX * this.increment;
             this.y = this.y + this.velY * this.increment;
-            // this.velX = this.velX + this.gravity * this.increment * 0.1;
             this.velY = this.velY + gravity * this.increment * 0.1;
+
+            this.angle = angleBetween({x: this.lastX, y: this.lastY}, {x: this.x, y: this.y});
+
+            console.log("a: " + this.angle * 180 / Math.PI)
+
         }
+
+        // var cos = Math.cos(angle),
+        // sin = Math.sin(angle);
+
+        // return {
+        //     x: cos -sin,
+        //     y: sin + cos
+        // }
     }
 
     projectile.draw = function(ctx) {
+        // ctx.beginPath();
+        // ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
+        // ctx.fillStyle = this.fillColor;
+        // ctx.fill();
+
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
+        ctx.moveTo(this.x, this.y);
+        ctx.lineTo(this.x + 20 * Math.cos(this.angle), this.y + 20 * Math.sin(this.angle));
+
+        ctx.strokeStyle = this.strokeColor;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(this.x + 20 * Math.cos(this.angle), this.y + 20 * Math.sin(this.angle));
+        ctx.lineTo(
+            this.x + this.headLength * Math.cos(this.angle - Math.PI / 7),
+            this.y + this.headLength * Math.sin(this.angle - Math.PI / 7)
+        );
+
+        ctx.lineTo(
+            this.x + this.headLength * Math.cos(this.angle + Math.PI / 7),
+            this.y + this.headLength * Math.sin(this.angle + Math.PI / 7)
+        );
+
+        ctx.lineTo(this.x + 20 * Math.cos(this.angle), this.y + 20 * Math.sin(this.angle));
+
+        ctx.strokeStyle = this.strokeColor;
+        ctx.stroke();
         ctx.fillStyle = this.fillColor;
         ctx.fill();
+
 
         ctx.font = "10px Arial";
         ctx.fillStyle = "rgba(34,34,34,0.85)";
@@ -159,15 +204,22 @@ const Projectile = function(x, y, angle, velocity) {
 window.addEventListener('load', (e) => {
     console.log('page is fully loaded');
 
-    const canvas = document.createElement('canvas');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    const ctx = canvas.getContext('2d');
+    const bgCanvas = document.createElement('canvas');
+    bgCanvas.width = window.innerWidth;
+    bgCanvas.height = window.innerHeight;
+    const bgCtx = bgCanvas.getContext('2d');
 
-    let cWidth = canvas.width;
-    let cHeight = canvas.height;
+    const fgCanvas = document.createElement('canvas');
+    fgCanvas.width = window.innerWidth;
+    fgCanvas.height = window.innerHeight;
+    const fgCtx = fgCanvas.getContext('2d');
 
-    document.body.appendChild(canvas);
+    let cWidth = bgCanvas.width;
+    let cHeight = bgCanvas.height;
+
+    let stage = document.getElementById("stage");
+    stage.appendChild(bgCanvas);
+    stage.appendChild(fgCanvas);
 
     let gravity = 10;
     let groundPoint = cHeight - (cHeight / 4);
@@ -201,31 +253,35 @@ window.addEventListener('load', (e) => {
 
     // Window resize listeners    
     window.onresize = (e) => {
-        canvas.width  = window.innerWidth;
-        canvas.height = window.innerHeight;
+        bgCanvas.width  = window.innerWidth;
+        bgCanvas.height = window.innerHeight;
+        fgCanvas.width  = window.innerWidth;
+        fgCanvas.height = window.innerHeight;
 
-        cWidth = canvas.width;
-        cHeight = canvas.height;
+        cWidth = bgCanvas.width;
+        cHeight = bgCanvas.height;
     };
 
     window.onscroll = (e) => {
-        canvas.setAttribute("style", "top: " + window.pageYOffset + "px");
+        bgCanvas.setAttribute("style", "top: " + window.pageYOffset + "px");
+        fgCanvas.setAttribute("style", "top: " + window.pageYOffset + "px");
     };
 
     function main() {
-        ctx.clearRect(0, 0, cWidth, cHeight);
-        bg.draw(ctx, cWidth, cHeight);
-        // ctx.fillStyle = "rgba(255,255,255,0.2)";
-        // ctx.fillRect(0,0,cWidth,cHeight);
-        shootingCircle.draw(ctx);
-        aimCircle.draw(ctx);
+        fgCtx.clearRect(0, 0, cWidth, cHeight);
+        // fgCtx.fillStyle = "rgba(255,255,255,0.1)";
+        // fgCtx.fillRect(0, 0, cWidth, cHeight);
+        bgCtx.clearRect(0, 0, cWidth, cHeight);
+        bg.draw(bgCtx, cWidth, cHeight);
+        shootingCircle.draw(fgCtx);
+        aimCircle.draw(fgCtx);
         if (mouseDown === true && savedMousePos.y < groundPoint) {
             if (arrow === undefined) {
                 arrow = Arrow();
             }
             arrow.update(mousePos, mouseDown, shootingCircle);
 
-            arrow.drawAiming(ctx, mousePos, shootingCircle);
+            arrow.drawAiming(fgCtx, mousePos, shootingCircle);
 
         } else if (arrow != undefined && mouseDown === false) {
             projectiles.push(
@@ -233,13 +289,12 @@ window.addEventListener('load', (e) => {
                     shootingCircle.x,
                     shootingCircle.y,
                     angleBetween(mousePos, aimCircle), 
-                    distanceBetween(aimCircle, mousePos) / 10
+                    distanceBetween(aimCircle, mousePos) / 6
                 )
             );
             if (projectiles.length > 10) {
                 projectiles.shift();
             }
-            // console.log(projectiles[projectiles.length -1])
             arrow = undefined;
         } else {
             shootingCircle.update(mousePos.x, mousePos.y);
@@ -250,7 +305,7 @@ window.addEventListener('load', (e) => {
 
         for (let projectile of projectiles) {
             projectile.update(gravity, groundPoint);
-            projectile.draw(ctx);
+            projectile.draw(fgCtx);
         }
 
         window.requestAnimationFrame(main);
