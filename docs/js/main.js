@@ -138,7 +138,7 @@ const Projectile = function(x, y, angle, velocity) {
     projectile.lastX = 0;
     projectile.lastY = 0;
     projectile.headLength = 20;
-    projectile.length = 28;
+    projectile.length = 26;
 
     projectile.update = function(gravity, groundPoint) {
         if (this.y < groundPoint - 6) {
@@ -164,19 +164,19 @@ const Projectile = function(x, y, angle, velocity) {
         ctx.beginPath();
         ctx.moveTo(this.x + this.length * Math.cos(this.angle), this.y + this.length * Math.sin(this.angle));
         ctx.lineTo(
-            this.x + this.headLength * Math.cos(this.angle - Math.PI / 16),
-            this.y + this.headLength * Math.sin(this.angle - Math.PI / 16)
+            this.x + this.headLength * Math.cos(this.angle - Math.PI / 17),
+            this.y + this.headLength * Math.sin(this.angle - Math.PI / 17)
         );
 
         ctx.lineTo(
-            this.x + this.headLength * Math.cos(this.angle + Math.PI / 16),
-            this.y + this.headLength * Math.sin(this.angle + Math.PI / 16)
+            this.x + this.headLength * Math.cos(this.angle + Math.PI / 17),
+            this.y + this.headLength * Math.sin(this.angle + Math.PI / 17)
         );
 
         ctx.lineTo(this.x + this.length * Math.cos(this.angle), this.y + this.length * Math.sin(this.angle));
         ctx.lineTo(
-            this.x + this.headLength * Math.cos(this.angle - Math.PI / 16),
-            this.y + this.headLength * Math.sin(this.angle - Math.PI / 16)
+            this.x + this.headLength * Math.cos(this.angle - Math.PI / 17),
+            this.y + this.headLength * Math.sin(this.angle - Math.PI / 17)
         );
 
         ctx.strokeStyle = this.strokeColor;
@@ -213,7 +213,7 @@ window.addEventListener('load', (e) => {
     stage.appendChild(fgCanvas);
 
     // sätt gravitationen samt markens punkt
-    let gravity = 15;
+    let gravity = 17;
     let groundPoint = cHeight - (cHeight / 4);
 
     // ny bakgrund
