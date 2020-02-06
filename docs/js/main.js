@@ -1,14 +1,14 @@
 const kolgra = "rgba(34,34,34,0.6)";
-const magenta = "rgba(75,0,130,0.45)";
-const ultraviolett = "rgba(221,8,144,0.2)";
+const ultraviolett = "rgba(75,0,130,0.55)";
+const magenta = "rgba(221,8,144,0.35)";
 const font = "12px Open Sans";
 
 const Background = function(groundPoint) {
     const background = {};
     background.ground = groundPoint + 15;
-    background.skyColor = ultraviolett;
+    background.skyColor = magenta;
     background.groundStroke = kolgra;
-    background.groundColor = magenta;
+    background.groundColor = ultraviolett;
 
     background.draw = function(ctx, cWidth, cHeight) {
         ctx.fillStyle = this.skyColor;
