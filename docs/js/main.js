@@ -122,13 +122,14 @@ const Projectile = function(x, y, angle, velocity) {
     projectile.velocity = velocity;
     projectile.velX = velocity * Math.cos(angle);
     projectile.velY = velocity * Math.sin(angle);
-    projectile.increment = 0.1;
+    projectile.increment = 0.2;
     projectile.strokeColor = "rgba(34,34,34,0.85)";
     projectile.fillColor = "rgba(34,34,34,0.65)";
     projectile.r = 4;
     projectile.lastX = 0;
     projectile.lastY = 0;
-    projectile.headLength = 10;
+    projectile.headLength = 8;
+    projectile.length = 18;
 
     projectile.update = function(gravity, groundPoint) {
 
@@ -169,13 +170,13 @@ const Projectile = function(x, y, angle, velocity) {
 
         ctx.beginPath();
         ctx.moveTo(this.x, this.y);
-        ctx.lineTo(this.x + 20 * Math.cos(this.angle), this.y + 20 * Math.sin(this.angle));
+        ctx.lineTo(this.x + this.length * Math.cos(this.angle), this.y + this.length * Math.sin(this.angle));
 
         ctx.strokeStyle = this.strokeColor;
         ctx.stroke();
 
         ctx.beginPath();
-        ctx.moveTo(this.x + 20 * Math.cos(this.angle), this.y + 20 * Math.sin(this.angle));
+        ctx.moveTo(this.x + this.length * Math.cos(this.angle), this.y + this.length * Math.sin(this.angle));
         ctx.lineTo(
             this.x + this.headLength * Math.cos(this.angle - Math.PI / 7),
             this.y + this.headLength * Math.sin(this.angle - Math.PI / 7)
@@ -186,7 +187,7 @@ const Projectile = function(x, y, angle, velocity) {
             this.y + this.headLength * Math.sin(this.angle + Math.PI / 7)
         );
 
-        ctx.lineTo(this.x + 20 * Math.cos(this.angle), this.y + 20 * Math.sin(this.angle));
+        ctx.lineTo(this.x + this.length * Math.cos(this.angle), this.y + this.length * Math.sin(this.angle));
 
         ctx.strokeStyle = this.strokeColor;
         ctx.stroke();
@@ -221,7 +222,7 @@ window.addEventListener('load', (e) => {
     stage.appendChild(bgCanvas);
     stage.appendChild(fgCanvas);
 
-    let gravity = 10;
+    let gravity = 15;
     let groundPoint = cHeight - (cHeight / 4);
 
     let bg = Background(groundPoint);
@@ -292,7 +293,7 @@ window.addEventListener('load', (e) => {
                     distanceBetween(aimCircle, mousePos) / 6
                 )
             );
-            if (projectiles.length > 10) {
+            if (projectiles.length > 20) {
                 projectiles.shift();
             }
             arrow = undefined;
