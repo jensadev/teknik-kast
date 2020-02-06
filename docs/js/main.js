@@ -94,6 +94,10 @@ const Arrow = function() {
             );
 
             ctx.lineTo(this.aim.x, this.aim.y);
+            ctx.lineTo(
+                this.aim.x + this.headLength * Math.cos(this.angle - Math.PI / 7),
+                this.aim.y + this.headLength * Math.sin(this.angle - Math.PI / 7)
+            );
 
             ctx.strokeStyle = this.strokeColor;
             ctx.stroke();
@@ -123,13 +127,13 @@ const Projectile = function(x, y, angle, velocity) {
     projectile.velX = velocity * Math.cos(angle);
     projectile.velY = velocity * Math.sin(angle);
     projectile.increment = 0.2;
-    projectile.strokeColor = "rgba(34,34,34,0.85)";
+    projectile.strokeColor = "rgba(34,34,34,0.65)";
     projectile.fillColor = "rgba(34,34,34,0.65)";
     projectile.r = 4;
     projectile.lastX = 0;
     projectile.lastY = 0;
-    projectile.headLength = 8;
-    projectile.length = 18;
+    projectile.headLength = 20;
+    projectile.length = 28;
 
     projectile.update = function(gravity, groundPoint) {
 
@@ -178,16 +182,20 @@ const Projectile = function(x, y, angle, velocity) {
         ctx.beginPath();
         ctx.moveTo(this.x + this.length * Math.cos(this.angle), this.y + this.length * Math.sin(this.angle));
         ctx.lineTo(
-            this.x + this.headLength * Math.cos(this.angle - Math.PI / 7),
-            this.y + this.headLength * Math.sin(this.angle - Math.PI / 7)
+            this.x + this.headLength * Math.cos(this.angle - Math.PI / 16),
+            this.y + this.headLength * Math.sin(this.angle - Math.PI / 16)
         );
 
         ctx.lineTo(
-            this.x + this.headLength * Math.cos(this.angle + Math.PI / 7),
-            this.y + this.headLength * Math.sin(this.angle + Math.PI / 7)
+            this.x + this.headLength * Math.cos(this.angle + Math.PI / 16),
+            this.y + this.headLength * Math.sin(this.angle + Math.PI / 16)
         );
 
         ctx.lineTo(this.x + this.length * Math.cos(this.angle), this.y + this.length * Math.sin(this.angle));
+        ctx.lineTo(
+            this.x + this.headLength * Math.cos(this.angle - Math.PI / 16),
+            this.y + this.headLength * Math.sin(this.angle - Math.PI / 16)
+        );
 
         ctx.strokeStyle = this.strokeColor;
         ctx.stroke();
