@@ -112,10 +112,10 @@ const Arrow = function() {
             ctx.font = font;
             ctx.fillStyle = kolgra;
             ctx.fillText(
-                Math.round(this.angle * (180 / Math.PI))
-                + "° Velocity: " + Math.round(distanceBetween(circle, mouse) / 6)
-                + " X: " + circle.x
-                + " Y: " + circle.y,
+                Math.round(this.angle * (180 / Math.PI)) + "°" 
+                + " velocity: " + Math.round(distanceBetween(circle, mouse) / 6)
+                + " x: " + circle.x
+                + " y: " + circle.y,
                 circle.x + 80, circle.y - 40
             );
         }
@@ -187,7 +187,8 @@ const Projectile = function(x, y, angle, velocity) {
 
         ctx.font = font;
         ctx.fillStyle = kolgra;
-        ctx.fillText("X: " + Math.round(this.x) + " Y: " + Math.round(this.y), this.x + 8, this.y - 4);
+        ctx.textAlign = "center";
+        ctx.fillText("x: " + Math.round(this.x) + " y: " + Math.round(this.y), this.x, this.y - 8);
     }
     return projectile;
 }
