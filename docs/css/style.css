@@ -1,13 +1,50 @@
 body {
     overflow: hidden;
     font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    line-height: 1.5;
+    color: rgba(34,34,34,0.8);
 }
 
 #stage {
+    z-index: 0;
     position: relative;
 }
 
 canvas {
     position: absolute;
     background-color: transparent;
+}
+
+#controls {
+    position: absolute;
+    top: 0px;
+    right: 24px;
+    padding: 1rem;
+    z-index: 100;
+    width: 120px;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+label {
+    display: inline-block;
+    margin-bottom: .25rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: .25rem .375rem;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    margin: 0;
+    height: 1rem;
+}
+
+input {
+    font: inherit;
+    color: rgba(34,34,34,0.6);
 }

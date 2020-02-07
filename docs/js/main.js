@@ -140,13 +140,14 @@ const Projectile = function(x, y, angle, velocity) {
     projectile.headLength = 20;
     projectile.length = 26;
 
-    projectile.update = function(gravity, groundPoint) {
+    projectile.update = function(gravity, friction, groundPoint) {
         if (this.y < groundPoint - 6) {
             this.lastX = this.x;
             this.lastY = this.y;
     
             this.x = this.x + this.velX * this.increment;
             this.y = this.y + this.velY * this.increment;
+            //this.velX = this.velX - friction * this.increment * 0.1;
             this.velY = this.velY + gravity * this.increment * 0.1;
 
             this.angle = angleBetween({x: this.lastX, y: this.lastY}, {x: this.x, y: this.y});
@@ -213,8 +214,43 @@ window.addEventListener('load', (e) => {
     stage.appendChild(fgCanvas);
 
     // sätt gravitationen samt markens punkt
-    let gravity = 17;
+    let gravity = 15;
+    let friction = 0;
     let groundPoint = cHeight - (cHeight / 4);
+
+    let gravityInput = document.getElementById("gravity");
+    gravityInput.value = gravity;
+
+    gravityInput.addEventListener("change", (e) => {
+        try {
+            if (isNaN(parseInt(gravityInput.value)) === true) {
+                throw("Not a number");
+            }
+            gravity = parseInt(gravityInput.value);
+        } catch(e) {
+            console.log(e);
+            gravity = 15;
+            gravityInput.clear
+            gravityInput.value = gravity;
+        }
+    });
+
+    let frictionInput = document.getElementById("friction");
+    frictionInput.value = friction;
+
+    frictionInput.addEventListener("change", (e) => {
+        try {
+            if (isNaN(parseInt(frictionInput.value)) === true) {
+                throw("Not a number");
+            }
+            friction = parseInt(frictionInput.value);
+        } catch(e) {
+            console.log(e);
+            friction = 0;
+            frictionInput.clear
+            frictionInput.placeholder = friction;
+        }
+    });
 
     // ny bakgrund
     let bg = Background(groundPoint);
@@ -232,17 +268,17 @@ window.addEventListener('load', (e) => {
     let savedMousePos;
     let mouseDown = false;
 
-    window.addEventListener('mousemove', (e) => {
+    stage.addEventListener('mousemove', (e) => {
         mousePos = getMousePos(e);
     });
 
-    window.addEventListener('mousedown', (e) => {
+    stage.addEventListener('mousedown', (e) => {
         mousePos = getMousePos(e);
         savedMousePos = getMousePos(e);
         mouseDown = true;
     });
 
-    window.addEventListener('mouseup', (e) => {
+    stage.addEventListener('mouseup', (e) => {
         mousePos = getMousePos(e);
         mouseDown = false;
     });
@@ -296,7 +332,7 @@ window.addEventListener('load', (e) => {
         }
 
         for (let projectile of projectiles) {
-            projectile.update(gravity, groundPoint);
+            projectile.update(gravity, friction, groundPoint);
             projectile.draw(fgCtx);
         }
 
