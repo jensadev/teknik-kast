@@ -140,15 +140,15 @@ const Projectile = function(x, y, angle, velocity) {
     projectile.headLength = 20;
     projectile.length = 26;
 
-    projectile.update = function(gravity, friction, groundPoint) {
+    projectile.update = function(gravity, friction, groundPoint, time) {
         if (this.y < groundPoint - 6) {
             this.lastX = this.x;
             this.lastY = this.y;
     
             this.x = this.x + this.velX * this.increment;
             this.y = this.y + this.velY * this.increment;
-            //this.velX = this.velX - friction * this.increment * 0.1;
-            this.velY = this.velY + gravity * this.increment * 0.1;
+            this.velX = this.velX * (1 - friction);
+            this.velY = (this.velY + gravity * time / 100 * 0.1) * (1 - friction);
 
             this.angle = angleBetween({x: this.lastX, y: this.lastY}, {x: this.x, y: this.y});
         }
@@ -231,7 +231,6 @@ window.addEventListener('load', (e) => {
         } catch(e) {
             console.log(e);
             gravity = 15;
-            gravityInput.clear
             gravityInput.value = gravity;
         }
     });
@@ -241,14 +240,13 @@ window.addEventListener('load', (e) => {
 
     frictionInput.addEventListener("change", (e) => {
         try {
-            if (isNaN(parseInt(frictionInput.value)) === true) {
+            if (isNaN(parseFloat(frictionInput.value)) === true) {
                 throw("Not a number");
             }
-            friction = parseInt(frictionInput.value);
+            friction = parseFloat(frictionInput.value);
         } catch(e) {
             console.log(e);
             friction = 0;
-            frictionInput.clear
             frictionInput.placeholder = friction;
         }
     });
@@ -300,7 +298,12 @@ window.addEventListener('load', (e) => {
         fgCanvas.setAttribute("style", "top: " + window.pageYOffset + "px");
     };
 
-    function main() {
+    let oldTimestamp;
+
+    function main(timestamp) {
+        let progress = timestamp - oldTimestamp;
+        oldTimestamp = timestamp;
+
         fgCtx.clearRect(0, 0, cWidth, cHeight);
         bgCtx.clearRect(0, 0, cWidth, cHeight);
         bg.draw(bgCtx, cWidth, cHeight);
@@ -333,7 +336,7 @@ window.addEventListener('load', (e) => {
         }
 
         for (let projectile of projectiles) {
-            projectile.update(gravity, friction, groundPoint);
+            projectile.update(gravity, friction, groundPoint, progress);
             projectile.draw(fgCtx);
         }
 
